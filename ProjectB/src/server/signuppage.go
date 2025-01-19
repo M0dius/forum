@@ -109,7 +109,7 @@ func SignupPage(w http.ResponseWriter, r *http.Request) {
 		}
 		defer stmt.Close()
 
-		_, err = stmt.Exec(F_name, L_name, username, email, password, "", 0, defaultAvatar)
+		_, err = stmt.Exec(F_name, L_name, username, email, password, "", 3, defaultAvatar)
 		if err != nil {
 			log.Println("Failed to insert user data:", err)
 			errData := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}

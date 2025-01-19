@@ -6,7 +6,6 @@ import (
 )
 
 func CommentReactions() {
-	// Open a connection to the SQLite3 database
 	db, err := sql.Open("sqlite3", "./database/main.db")
 	if err != nil {
 		log.Fatal(err)
