@@ -10,7 +10,7 @@ import (
 
 func init() {
 	db.DataBase()
-	db.DropDataBase()
+	//db.DropDataBase()
 }
 
 func main() {

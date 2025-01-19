@@ -8,14 +8,12 @@ import (
 )
 
 func DropDataBase() {
-	// Open a connection to the SQLite3 database
 	db, err := sql.Open("sqlite3", "./database/main.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	// DROP TABLE statements
 	const DropCategoriesTable = `DROP TABLE IF EXISTS categories;`
 	const DropCommentTable = `DROP TABLE IF EXISTS comment;`
 	const DropDislikeTable = `DROP TABLE IF EXISTS dislikes;`
@@ -33,7 +31,6 @@ func DropDataBase() {
 	const DropFollowingTable = `DROP TABLE IF EXISTS following;`
 	const DropReportsTable = `DROP TABLE IF EXISTS reports;`
 
-	// Execute DROP TABLE statements
 	dropTableStatements := []string{
 		DropCategoriesTable,
 		DropCommentTable,
