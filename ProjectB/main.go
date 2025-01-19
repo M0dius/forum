@@ -11,7 +11,6 @@ import (
 func init() {
 	db.DataBase()
 	db.DropDataBase()
-	db.CommentReactions()
 }
 
 func main() {
