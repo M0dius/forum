@@ -20,6 +20,8 @@ func DropDataBase() {
 	const DropCommentTable = `DROP TABLE IF EXISTS comment;`
 	const DropDislikeTable = `DROP TABLE IF EXISTS dislikes;`
 	const DropLikeTable = `DROP TABLE IF EXISTS likes;`
+	const DropCommentDislikeTable = `DROP TABLE IF EXISTS comment_dislikes;`
+	const DropCommentLikeTable = `DROP TABLE IF EXISTS comment_likes;`
 	const DropPostTable = `DROP TABLE IF EXISTS post;`
 	const DropPostHasCategoriesTable = `DROP TABLE IF EXISTS post_has_categories;`
 	const DropSessionsTable = `DROP TABLE IF EXISTS session;`
@@ -37,6 +39,8 @@ func DropDataBase() {
 		DropCommentTable,
 		DropDislikeTable,
 		DropLikeTable,
+		DropCommentDislikeTable,
+		DropCommentLikeTable,
 		DropPostTable,
 		DropPostHasCategoriesTable,
 		DropSessionsTable,

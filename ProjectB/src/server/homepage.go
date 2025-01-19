@@ -6,6 +6,7 @@ import (
 	"forum/database"
 	"log"
 	"net/http"
+	"time"
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
@@ -46,11 +47,21 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		seshVal := seshCok.Value
 
 		err = db.QueryRow("SELECT userid, Username FROM user WHERE current_session = ?", seshVal).Scan(&userID, &userName)
-		if err != nil {
+		if err == sql.ErrNoRows {
+			http.SetCookie(w, &http.Cookie{
+				Name:     "session_token",
+				Value:    "",
+				Expires:  time.Now().Add(-time.Hour),
+				HttpOnly: true,
+			})
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		} else if err != nil {
 			log.Println("Error fetching userid ID from user table:", err)
 			err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
 			errHandler(w, r, &err)
 			return
+		} else {
+			log.Println("User is logged in:", userName)
 		}
 	}
 

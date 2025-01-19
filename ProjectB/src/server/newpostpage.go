@@ -49,21 +49,6 @@ func NewPostPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	urlUserID, err := strconv.Atoi(r.URL.Query().Get("user"))
-	if err != nil {
-		log.Println("Error converting URL user ID to integer")
-		err := ErrorPageData{Code: "400", ErrorMsg: "BAD REQUEST"}
-		errHandler(w, r, &err)
-		return
-	}
-
-	if urlUserID != userID {
-		log.Println("User is not authorized to access this page")
-		err := ErrorPageData{Code: "403", ErrorMsg: "FORBIDDEN"}
-		errHandler(w, r, &err)
-		return
-	}
-
 	switch r.Method {
 	case "GET":
 		categories, err := database.GetAllCategories(db)
