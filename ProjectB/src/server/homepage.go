@@ -91,21 +91,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	if selectedTab == "" {
 		selectedTab = "posts"
 	}
-	if selectedTab == "" {
-		selectedTab = "posts"
-	}
 
-	if filter == "" {
-		if selectedTab == "your+posts" {
-			filter = "newest"
-		} else if selectedTab == "your+replies" {
-			filter = "newest"
-		} else if selectedTab == "your+reactions" {
-			filter = "likes"
-		} else {
-			filter = "all"
-		}
-	}
 	if filter == "" {
 		if selectedTab == "your+posts" {
 			filter = "newest"
@@ -150,7 +136,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		if filter == "all" {
 			posts = allPosts
 		} else if CheckFilter(filter, categoryNames) {
-			posts, err = database.GetFilteredPosts(db, filter)
+			posts, err = database.GetPostsByCategory(db, filter)
 			if err != nil {
 				log.Println("Failed to fetch posts:", err)
 				err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
