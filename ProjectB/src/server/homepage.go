@@ -10,7 +10,7 @@ import (
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/home" {
-		log.Println("Incorrect path")
+		log.Println("Invalid URL path")
 		err := ErrorPageData{Code: "404", ErrorMsg: "PAGE NOT FOUND"}
 		errHandler(w, r, &err)
 		return

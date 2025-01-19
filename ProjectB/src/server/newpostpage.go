@@ -13,41 +13,62 @@ import (
 const maxPostLength = 500
 
 func NewPostPage(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/newpost" {
+		log.Println("Invalid URL path")
+		err := ErrorPageData{Code: "404", ErrorMsg: "PAGE NOT FOUND"}
+		errHandler(w, r, &err)
+	}
+
+	db, err := sql.Open("sqlite3", "./database/main.db")
+	if err != nil {
+		log.Println("Database connection failed")
+		err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
+		errHandler(w, r, &err)
+		return
+	}
+	defer db.Close()
+
+	// Fetch session cookie
+	seshCok, err := r.Cookie("session_token")
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusBadRequest)
+		fmt.Println("Error fetching session cookie")
+		return
+	}
+
+	// Set session token from cookie value
+	seshVal := seshCok.Value
+
+	var userID int
+	var userName string
+	err = db.QueryRow("SELECT userid, Username FROM user WHERE current_session = ?", seshVal).Scan(&userID, &userName)
+	if err != nil {
+		log.Println("Error fetching userid and username from user table:", err)
+		err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
+		errHandler(w, r, &err)
+		return
+	}
+
+	urlUserID, err := strconv.Atoi(r.URL.Query().Get("user"))
+	if err != nil {
+		log.Println("Error converting URL user ID to integer")
+		err := ErrorPageData{Code: "400", ErrorMsg: "BAD REQUEST"}
+		errHandler(w, r, &err)
+		return
+	}
+
+	if urlUserID != userID {
+		log.Println("User is not authorized to access this page")
+		err := ErrorPageData{Code: "403", ErrorMsg: "FORBIDDEN"}
+		errHandler(w, r, &err)
+		return
+	}
+
 	switch r.Method {
 	case "GET":
-		db, err := sql.Open("sqlite3", "./database/main.db")
-		if err != nil {
-			log.Println("Database connection failed")
-			err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
-			errHandler(w, r, &err)
-			return
-		}
-		defer db.Close()
-
 		categories, err := database.GetAllCategories(db)
 		if err != nil {
 			log.Println("Failed to fetch categories")
-			err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
-			errHandler(w, r, &err)
-			return
-		}
-
-		// Fetch session cookie
-		seshCok, err := r.Cookie("session_token")
-		if err != nil {
-			http.Redirect(w, r, "/", http.StatusBadRequest)
-			fmt.Println("Error fetching session cookie")
-			return
-		}
-
-		// Set session token from cookie value
-		seshVal := seshCok.Value
-
-		var userID int
-		var userName string
-		err = db.QueryRow("SELECT userid, Username FROM user WHERE current_session = ?", seshVal).Scan(&userID, &userName)
-		if err != nil {
-			log.Println("Error fetching userid and username from user table:", err)
 			err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
 			errHandler(w, r, &err)
 			return
@@ -175,15 +196,6 @@ func NewPostPage(w http.ResponseWriter, r *http.Request) {
 		} else {
 			image.Valid = false
 		}
-
-		db, err := sql.Open("sqlite3", "./database/main.db")
-		if err != nil {
-			log.Println("Database connection failed")
-			err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
-			errHandler(w, r, &err)
-			return
-		}
-		defer db.Close()
 
 		postID, err := database.InsertPost(db, content, image, userID)
 		if err != nil {

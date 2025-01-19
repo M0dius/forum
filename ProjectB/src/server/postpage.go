@@ -11,17 +11,17 @@ import (
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/post" {
-		log.Println("Redirecting to Home page")
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		log.Println("Invalid URL path")
+		err := ErrorPageData{Code: "404", ErrorMsg: "PAGE NOT FOUND"}
+		errHandler(w, r, &err)
 		return
 	}
-	
+
 	if r.Method != "GET" {
 		log.Println("Method not allowed")
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
 
 	db, err := sql.Open("sqlite3", "./database/main.db")
 	if err != nil {
@@ -70,11 +70,12 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
         WHERE post.postid = ?
 		`, postID).Scan(&post.PostID, &post.Image, &post.Content, &post.PostAt, &post.UserUserID, &post.Username, &post.FirstName, &post.LastName, &post.Avatar, &post.Likes, &post.Dislikes, &post.Comments)
 	if err != nil {
-		log.Println("Error querying post:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Failed to fetch posts")
+		errData := ErrorPageData{Code: "400", ErrorMsg: "BAD REQUEST"}
+		errHandler(w, r, &errData)
 		return
 	}
-	
+
 	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
 		log.Println("Error converting post ID to integer:", err)
@@ -87,7 +88,6 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	
 
 	if userID < 0 {
 		log.Println("User ID not found in query parameters")
