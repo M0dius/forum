@@ -15,22 +15,13 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
 		return
 	}
-	if r.URL.Path != "/post" {
-		log.Println("Redirecting to Home page")
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
-		return
-	}
-
+	
 	if r.Method != "GET" {
 		log.Println("Method not allowed")
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	if r.Method != "GET" {
-		log.Println("Method not allowed")
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+	
 
 	db, err := sql.Open("sqlite3", "./database/main.db")
 	if err != nil {
@@ -83,12 +74,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	if err != nil {
-		log.Println("Error querying post:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
-	}
-
+	
 	postIDInt, err := strconv.Atoi(postID)
 	if err != nil {
 		log.Println("Error converting post ID to integer:", err)
@@ -101,18 +87,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	postIDInt, err = strconv.Atoi(postID)
-	if err != nil {
-		log.Println("Error converting post ID to integer:", err)
-		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
-	}
-	comments, err = database.GetCommentsForPost(db, postIDInt)
-	if err != nil {
-		log.Println("Error getting comments for post:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
-	}
+	
 
 	if userID < 0 {
 		log.Println("User ID not found in query parameters")
@@ -137,12 +112,6 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		Categories: categories,
 	}
 
-	err = templates.ExecuteTemplate(w, "post.html", data)
-	if err != nil {
-		log.Println("Error executing template:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
-	}
 	err = templates.ExecuteTemplate(w, "post.html", data)
 	if err != nil {
 		log.Println("Error executing template:", err)
