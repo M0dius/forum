@@ -219,6 +219,46 @@ func DataBase() {
 		`INSERT INTO categories (name, description) VALUES ('Data Analytics', 'Extracting insights from big data');`,
 		`INSERT INTO categories (name, description) VALUES ('Quantum Computing', 'Next-gen computing paradigms and qubits');`,
 		`INSERT INTO categories (name, description) VALUES ('SRE & Observability', 'Site Reliability Engineering and system observability');`,
+		`INSERT INTO categories (name, description) VALUES ('Programming', 'Coding tips, tricks, and best practices');`,
+		`INSERT INTO categories (name, description) VALUES ('Open Source', 'Contributing to and building open-source projects');`,
+		`INSERT INTO categories (name, description) VALUES ('Tech News', 'The latest in tech news and trends');`,
+		`INSERT INTO categories (name, description) VALUES ('Product Management', 'Building and managing tech products');`,
+		`INSERT INTO categories (name, description) VALUES ('Career & Skills', 'Guidance on career growth and skill development');`,
+		`INSERT INTO categories (name, description) VALUES ('Startup & VC', 'Startup stories and venture capital insights');`,
+		`INSERT INTO categories (name, description) VALUES ('Remote Work', 'Tips and tools for remote work success');`,
+		`INSERT INTO categories (name, description) VALUES ('Diversity & Inclusion', 'Promoting diversity and inclusion in tech');`,
+		`INSERT INTO categories (name, description) VALUES ('Tech Policy', 'Insights on tech policy and regulation');`,
+		`INSERT INTO categories (name, description) VALUES ('Gadgets & Gear', 'Reviews and recommendations on tech gadgets');`,
+		`INSERT INTO categories (name, description) VALUES ('Science & Space', 'Exploring the frontiers of science and space');`,
+		`INSERT INTO categories (name, description) VALUES ('Health & Wellness', 'Tech solutions for health and wellness');`,
+		`INSERT INTO categories (name, description) VALUES ('Climate & Environment', 'Tech solutions for climate and environmental issues');`,
+		`INSERT INTO categories (name, description) VALUES ('Education & EdTech', 'Innovations in education and educational technology');`,
+		`INSERT INTO categories (name, description) VALUES ('Entertainment', 'Tech in entertainment and media');`,
+		`INSERT INTO categories (name, description) VALUES ('Social Media', 'Insights on social media platforms and trends');`,
+		`INSERT INTO categories (name, description) VALUES ('Marketing & SEO', 'Marketing strategies and search engine optimization');`,
+		`INSERT INTO categories (name, description) VALUES ('Finance & Fintech', 'Fintech innovations and financial services');`,
+		`INSERT INTO categories (name, description) VALUES ('Legal Tech', 'Legal technology and law practice');`,
+		`INSERT INTO categories (name, description) VALUES ('Design & Creativity', 'Design inspiration and creative tools');`,
+		`INSERT INTO categories (name, description) VALUES ('Writing & Content', 'Writing tips and content creation strategies');`,
+		`INSERT INTO categories (name, description) VALUES ('Audio & Podcasts', 'Podcasting and audio content creation');`,
+		`INSERT INTO categories (name, description) VALUES ('Video & Film', 'Video production and filmmaking');`,
+		`INSERT INTO categories (name, description) VALUES ('Photography', 'Photography tips and techniques');`,
+		`INSERT INTO categories (name, description) VALUES ('Art & Illustration', 'Art and illustration techniques and tools');`,
+		`INSERT INTO categories (name, description) VALUES ('Crafts & DIY', 'Crafting and do-it-yourself projects');`,
+		`INSERT INTO categories (name, description) VALUES ('Food & Cooking', 'Food and cooking recipes and techniques');`,
+		`INSERT INTO categories (name, description) VALUES ('Travel & Adventure', 'Travel stories and adventure experiences');`,
+		`INSERT INTO categories (name, description) VALUES ('Sports & Fitness', 'Sports and fitness tips and techniques');`,
+		`INSERT INTO categories (name, description) VALUES ('Gaming', 'Gaming news and reviews');`,
+		`INSERT INTO categories (name, description) VALUES ('Books & Literature', 'Book reviews and literary discussions');`,
+		`INSERT INTO categories (name, description) VALUES ('Music & Audio', 'Music news and audio production');`,
+		`INSERT INTO categories (name, description) VALUES ('Film & TV', 'Film and television news and reviews');`,
+		`INSERT INTO categories (name, description) VALUES ('Fashion & Beauty', 'Fashion and beauty trends and tips');`,
+		`INSERT INTO categories (name, description) VALUES ('Home & Garden', 'Home improvement and gardening tips');`,
+		`INSERT INTO categories (name, description) VALUES ('Parenting & Family', 'Parenting advice and family life discussions');`,
+		`INSERT INTO categories (name, description) VALUES ('Weddings & Events', 'Wedding planning and event management');`,
+		`INSERT INTO categories (name, description) VALUES ('Science Fiction', 'Sci-fi books, movies, and TV shows');`,
+		`INSERT INTO categories (name, description) VALUES ('Fantasy', 'Fantasy books, movies, and TV shows');`,
+		`INSERT INTO categories (name, description) VALUES ('Horror', 'Horror books, movies, and TV shows');`,
 	}
 
 	insertUserRoles := []string{
@@ -228,16 +268,16 @@ func DataBase() {
 		`INSERT INTO user_roles (role_name) VALUES ('Guest');`,
 	}
 
-	insertUser := `INSERT INTO user (F_name, L_name, Username, Email, password, current_session, role_id, Avatar) VALUES ('Alicia', 'Nguyen', 'aliceN', 'aliceN@example.com', 'alicePass', 1, 1, 'https://randomuser.me/api/portraits/women/1.jpg');`
-
-	db.Exec(insertUser)
+	insertUsers := []string{
+		`INSERT INTO user (F_name, L_name, Username, Email, password, current_session, role_id, Avatar) VALUES ('Alicia', 'Nguyen', 'aliceN', 'aliceN@example.com', '123', 1, 1, 'https://randomuser.me/api/portraits/women/1.jpg');`,
+	}
 
 	allInserts := [][]string{
 		insertCategories,
 		insertUserRoles,
+		insertUsers,
 	}
 
-	fmt.Print(allInserts)
 
 	for _, group := range allInserts {
 		for _, stmt := range group {
