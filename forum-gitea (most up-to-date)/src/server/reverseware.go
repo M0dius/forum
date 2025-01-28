@@ -20,7 +20,7 @@ func ReverseMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		defer db.Close()
 
 		// Fetch session cookie
-		seshCok, err := r.Cookie("session_toekn")
+		seshCok, err := r.Cookie("session_token")
 		if err != nil {
 			fmt.Println("This user has no cookie")
 		} else {
@@ -34,7 +34,9 @@ func ReverseMiddleware(next http.HandlerFunc) http.HandlerFunc {
 				err := ErrorPageData{Code: "500", ErrorMsg: "INTERNAL SERVER ERROR"}
 				errHandler(w, r, &err)
 				return
-			} else if !exists {
+			} 
+			
+			if !exists {
 				log.Println("Inavlid Session")
 				http.SetCookie(w, &http.Cookie{
 					Name:     "session_token",
@@ -44,8 +46,8 @@ func ReverseMiddleware(next http.HandlerFunc) http.HandlerFunc {
 				})
 				http.Redirect(w, r, "/", http.StatusBadRequest)
 			} else if exists {
-				fmt.Println("Valid cookie")
-				http.Redirect(w, r, "/home", http.StatusUnauthorized)
+				fmt.Println("Valid session")
+				http.Redirect(w, r, "/home", http.StatusSeeOther)
 			}
 		}
 		next.ServeHTTP(w, r)
